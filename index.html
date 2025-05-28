@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Haunted House</title>
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
+      color: #f0f0f0;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px;
+      background: url('https://images.unsplash.com/photo-1508963493744-76fce69379c0?auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+      background-blend-mode: multiply;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    header h1 {
+      font-family: 'Creepster', cursive;
+      font-size: 4em;
+      color: #ff0000;
+      text-shadow: 2px 2px 4px #000;
+    }
+
+    header p {
+      font-size: 1.2em;
+      margin-top: 10px;
+      color: #ddd;
+    }
+
+    section {
+      padding: 60px 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    section h2 {
+      font-family: 'Creepster', cursive;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #e60000;
+    }
+
+    section p {
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px;
+      background: #111;
+      font-size: 0.9em;
+      color: #888;
+    }
+
+    /* Flicker animation */
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+      }
+      20%, 24%, 55% {
+        opacity: 0.1;
+      }
+    }
+
+    .flicker {
+      animation: flicker 3s infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="flicker">The Haunted House</h1>
+    <p>Dare to enter the shadows?</p>
+  </header>
+
+  <section>
+    <h2>Welcome, Brave Soul...</h2>
+    <p>
+      Deep within the mist-covered woods lies a house untouched by time — or light. Legends say spirits roam its halls, whispering secrets of the past. Every creak, every shadow, every cold breath on your neck tells a story.
+    </p>
+  </section>
+
+  <section>
+    <h2>What Awaits Inside</h2>
+    <p>
+      🔮 Mysterious rooms filled with haunted relics<br>
+      👻 Ghostly apparitions that follow your every move<br>
+      🕯️ Candlelit corridors where time stands still<br>
+      🎃 A Halloween night you'll never forget...
+    </p>
+  </section>
+
+  <section>
+    <h2>Join Us If You Dare</h2>
+    <p>
+      Ready to explore the unknown? Gather your friends — or your courage — and step into the haunted house experience. But beware... some who enter never leave.
+    </p>
+  </section>
+
+  <div class="footer">
+    &copy; 2025 The Haunted House. All Frights Reserved.
+  </div>
+
+</body>
+</html>
