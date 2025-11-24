@@ -1,220 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>The Exotic House</title>
-    
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Verdana', sans-serif; background: #111; color: #fff; background-image: url("img/h.jpg");background-repeat: no-repeat;background-size: 100%;}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Exotic House</title>
 
-  img {
+<style>
+/* RESET + BODY */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Verdana', sans-serif;
+    background: #111 url("img/h.jpg") no-repeat top center / cover;
+    color: #fff;
+}
+
+/* IMAGE DEFAULT */
+img {
     width: 100%;
     height: auto;
     display: block;
-  }
-  .cursor {
-    cursor: pointer;
-  }
-  .prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    padding: 12px;
-    color: white;
-    font-weight: bold;
-    font-size: 24px;
-    transition: 0.3s ease;
-    user-select: none;
-    z-index: 2;
-    background-color: rgba(0,0,0,0.3);
-    border-radius: 50%;
-  }
-  .text {
-    color: #f2f2f2;
-    font-size: 16px;
-    padding: 8px 12px;
-    position: absolute;
-    bottom: 30px;
-    width: 100%;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.3);
-  }
+}
 
-  .numbertext {
-    color: #f2f2f2;
-    font-size: 12px;
-    padding: 8px 12px;
-    position: absolute;
-    top: 0;
-  }
+/* GRID */
 .row {
-  display: flex;
-  flex-wrap: wrap;       /* Allow the items to wrap onto the next line */
-  justify-content: space-between; /* Distribute items evenly */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .column {
-  flex: 1 1 16%;         /* Flex grow, flex shrink, and base size */
-  padding: 10px;         /* Add some spacing between columns */
+    flex: 1 1 16%;
+    padding: 10px;
 }
+
 .column img {
-  width: 100%;                /* Make images fill the width of the  column */
-  height: 120px;              /* Fixed height for all thumbnails */
-  object-fit: cover;          /* Ensure the image maintains aspect ratio while covering the area */
-  display: block;             /* Removes bottom space that may occur due to inline-block elements */
-  margin-bottom: 10px;        /* Space between the rows of images */
+    height: 120px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: 0.25s;
 }
-.lightbox {
+
+.column img:hover {
+    opacity: 1;
+}
+
+/* LIGHTBOX */
+#lightbox {
     display: none;
     position: fixed;
-    z-index: 1;
-    padding-top:80px ;
-    left: 0;top: 0;
-    width: 100%;height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.9);
+    z-index: 9999;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9);
     text-align: center;
+    overflow: auto;
+    padding-top: 50px; /* Some top spacing */
 }
-.lightbox img {
-  max-width: 100%;
-  max-height: 85vh;
-  margin-top: 60px;
-  border-radius: 6px;
+
+/* Make lightbox content centered */
+.lightbox-content {
+    position: relative; /* Arrows positioned relative to this */
+    display: inline-block; /* Shrink to image size */
+    margin: auto;
+    padding: 0;
+    width: 100%; /* Adjust width to ensure arrows are within bounds */
+    max-width: 1200px; /* Limit max width of image */
+    height: auto;  /* Ensure the content box height adjusts to the image */
 }
-#lightbox-caption{
+
+#lightbox img {
+    max-width: 100%;
+    max-height: 85vh;  /* Adjust to allow the image to be larger */
+    margin: 0;         /* Remove extra space around image */
+    border-radius: 6px;
+    object-fit: contain;  /* Maintain aspect ratio */
+}
+
+/* Caption */
+#lightbox-caption {
     text-align: center;
     color: #ccc;
     padding: 10px;
-    font-size: 12px;
+    font-size: 14px;
 }
-.lightbox-close{
+
+.lightbox-close {
     position: absolute;
     top: 20px;
-    right: 35px;
-    color: #f1f1f1;
-  font-size: 40px;
-  cursor: pointer;
+    right: 25px;
+    color: #fff;
+    font-size: 40px;
+    cursor: pointer;
+    z-index: 10000;
 }
-.close:hover,
-.close:focus {
-  color: #999;
-  text-decoration: none;
-  cursor: pointer;
-}
-/* Next & previous buttons */
-.prev,
-.next {
-cursor: pointer;
-  position: absolute;
-  top: 50%;
-  padding: 16px;
-  margin-top: -50px;
-  color: white;
-  font-size: 40px;
-  user-select: none;
-  transition: 0.2s;
-}
-.prev {
-  left: 1px;
-}
-.next {
-  right: 1px;
-}
-.prev:hover,
-.next:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-}
-  /* Add a transparency effect for thumnbail images */
-  .demo {
-    opacity: 0.6;
-  }
 
-  .active,
-  .demo:hover {
-    opacity: 1;
-  }
+/* ARROWS */
+.light-prev, .light-next {
+    cursor: pointer;
+    position: absolute;  /* Positioned relative to .lightbox-content */
+    top: 50%;  /* Vertically center the arrows */
+    transform: translateY(-50%);
+    color: white;
+    font-size: 40px;
+    padding: 10px;
+    user-select: none;
+    z-index: 1000;
+}
 
-  .fade {
-    animation-name: fade;
-    animation-duration: 1s;
-  }
+.light-prev { 
+    left: 10px;  /* Adjust distance from image */
+}
 
-  @keyframes fade {
-    from { opacity: .4 }
-    to { opacity: 1 }
-  }
+.light-next { 
+    right: 30px;  /* Adjust distance from image */
+}
 
-  @media screen and (max-width: 600px) {
-    .prev, .next {
-      font-size: 18px;
-      padding: 10px;
+/* Arrows hover effect */
+.light-prev:hover, .light-next:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+}
+
+/* Ensure arrows are properly visible on small screens */
+@media (max-width: 768px) {
+    .light-prev, .light-next {
+        font-size: 30px;  /* Reduce arrow size */
+        padding: 8px;     /* Reduce padding */
     }
 
-    .text {
-      font-size: 14px;
+    #lightbox img {
+        max-width: 95%;  /* Allow more space for image */
     }
-  }
+}
+
+
 </style>
 </head>
+
 <body>
-    <header style="text-align: center;">
-        <a class="flicker" style="font-size: 40px; color: red;" href="index.html">Home</a>
-    </header>
+
+<header style="text-align:center;">
+    <a style="font-size:40px;color:red;" href="index.html">Home</a>
+</header>
+
 <!-- LIGHTBOX -->
-<div id="lightbox" class="lightbox">
+<div id="lightbox">
     <span class="lightbox-close">&times;</span>
-    <img id="lightbox-img">
+
+    <div class="lightbox-content"> <!-- Relative container -->
+        <img id="lightbox-img">
+        <a class="light-prev">&#10094;</a>
+        <a class="light-next">&#10095;</a>
+    </div>
+
     <div id="lightbox-caption"></div>
-
-    <!-- Arrows -->
-    <a class="prev">&#10094;</a>
-    <a class="next">&#10095;</a>
 </div>
 
-
-<!-- Thumbnail images -->
+<!-- THUMBNAILS -->
 <div class="row">
-  <div class=" column">
-    <img class="demo cursor" src="img/1.jpg" style="width:100%" onclick="currentSlide(1)">
-  </div>
-  <div class=" column">
-    <img class="demo cursor" src="img/2.jpg" style="width:100%" onclick="currentSlide(2)">
-  </div>
-  <div class=" column">
-    <img class="demo cursor" src="img/3.jpg" style="width:100%" onclick="currentSlide(3)">
-  </div>
-  <div class=" column">
-    <img class="demo cursor" src="img/4.jpg" style="width:100%" onclick="currentSlide(4)">
-  </div>
-  <div class=" column">
-    <img class="demo cursor" src="img/5.jpg" style="width:100%" onclick="currentSlide(5)">
-  </div>
-  <div class=" column">
-    <img class="demo cursor" src="img/6.jpg" style="width:100%" onclick="currentSlide(6)">
-  </div>
+    <div class="column"><img src="img/1.jpg" data-index="0"></div>
+    <div class="column"><img src="img/2.jpg" data-index="1"></div>
+    <div class="column"><img src="img/3.jpg" data-index="2"></div>
+    <div class="column"><img src="img/4.jpg" data-index="3"></div>
+    <div class="column"><img src="img/5.jpg" data-index="4"></div>
+    <div class="column"><img src="img/6.jpg" data-index="5"></div>
 </div>
-
 <div class="row">
-  <div class=" column">
-    <img class="demo cursor" src="img/7.jpg" style="width:100%" onclick="currentSlide(7)">
-  </div>
-  <div class=" column">
-    <img class="demo cursor" src="img/8.jpg" style="width:100%" onclick="currentSlide(8)">
-  </div>
-  <div class=" column">
-    <img class="demo cursor" src="img/9.jpg" style="width:100%" onclick="currentSlide(9)">
-  </div>
-  <div class=" column">
-    <img class="demo cursor" src="img/10.jpg" style="width:100%" onclick="currentSlide(10)">
-  </div>
-  <div class=" column">
-    <img class="demo cursor" src="img/11.jpg" style="width:100%" onclick="currentSlide(11)">
-  </div>
+    <div class="column"><img src="img/7.jpg" data-index="6"></div>
+    <div class="column"><img src="img/8.jpg" data-index="7"></div>
+    <div class="column"><img src="img/9.jpg" data-index="8"></div>
+    <div class="column"><img src="img/10.jpg" data-index="9"></div>
+    <div class="column"><img src="img/11.jpg" data-index="10"></div>
 </div>
 
 <script>
+// IMAGE DATA
 const slidesData = [
     { src: "img/1.jpg", caption: "Ratargul Trip!" },
     { src: "img/2.jpg", caption: "Ratargul" },
@@ -235,7 +197,7 @@ const lightbox = document.getElementById("lightbox");
 const lightImg = document.getElementById("lightbox-img");
 const lightCaption = document.getElementById("lightbox-caption");
 
-// OPEN LIGHTBOX
+// OPEN
 function openLightbox(n) {
     lightIndex = n;
     lightbox.style.display = "block";
@@ -243,12 +205,12 @@ function openLightbox(n) {
     lightCaption.innerText = slidesData[n].caption;
 }
 
-// CLOSE LIGHTBOX
+// CLOSE
 function closeLightbox() {
     lightbox.style.display = "none";
 }
 
-// NEXT / PREVIOUS
+// ARROWS
 function nextLight() {
     lightIndex = (lightIndex + 1) % slidesData.length;
     openLightbox(lightIndex);
@@ -260,30 +222,29 @@ function prevLight() {
 }
 
 // THUMBNAILS CLICK
-document.querySelectorAll(".demo").forEach((thumb, i) => {
-    thumb.addEventListener("click", () => openLightbox(i));
+document.querySelectorAll(".column img").forEach((img) => {
+    img.addEventListener("click", () => openLightbox(parseInt(img.dataset.index)));
 });
 
 // CLOSE BUTTON
-document.querySelector(".lightbox-close").onclick = closeLightbox;
+document.querySelector(".lightbox-close").addEventListener("click", closeLightbox);
 
-// CLICK OUTSIDE IMAGE TO CLOSE
+// CLICK OUTSIDE IMAGE
 lightbox.addEventListener("click", (e) => {
     if (e.target === lightbox) closeLightbox();
 });
 
-// ARROWS
-document.querySelector(".prev").onclick = (e) => {
+// ARROW BUTTONS
+document.querySelector(".light-prev").addEventListener("click", (e) => {
     e.stopPropagation();
     prevLight();
-};
-
-document.querySelector(".next").onclick = (e) => {
+});
+document.querySelector(".light-next").addEventListener("click", (e) => {
     e.stopPropagation();
     nextLight();
-};
+});
 
-// KEYBOARD SUPPORT
+// KEYBOARD
 document.addEventListener("keydown", (e) => {
     if (lightbox.style.display === "block") {
         if (e.key === "ArrowRight") nextLight();
@@ -292,9 +253,6 @@ document.addEventListener("keydown", (e) => {
     }
 });
 </script>
-
-  
-  
 
 </body>
 </html>
