@@ -9,20 +9,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Verdana', sans-serif; background: #111; color: #fff; background-image: url("img/h.jpg");background-repeat: no-repeat;background-size: 100%;}
 
-  .slideshow-container {
-    max-width: 800px;
-    position: relative;
-    margin: auto;
-    overflow: hidden;
-    touch-action: pan-y;
-    top: 10px;
-  }
-
-  .mySlides {
-    display: none;
-    position: relative;
-  }
-
   img {
     width: 100%;
     height: auto;
@@ -45,14 +31,6 @@
     background-color: rgba(0,0,0,0.3);
     border-radius: 50%;
   }
-
-  .prev { left: 10px; transform: translateY(-50%); }
-  .next { right: 10px; transform: translateY(-50%); }
-
-  .prev:hover, .next:hover {
-    background-color: rgba(0,0,0,0.6);
-  }
-
   .text {
     color: #f2f2f2;
     font-size: 16px;
@@ -88,7 +66,66 @@
   display: block;             /* Removes bottom space that may occur due to inline-block elements */
   margin-bottom: 10px;        /* Space between the rows of images */
 }
-
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top:80px ;
+    left: 0;top: 0;
+    width: 100%;height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+    text-align: center;
+}
+.lightbox img {
+  max-width: 100%;
+  max-height: 85vh;
+  margin-top: 60px;
+  border-radius: 6px;
+}
+#lightbox-caption{
+    text-align: center;
+    color: #ccc;
+    padding: 10px;
+    font-size: 12px;
+}
+.lightbox-close{
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+  font-size: 40px;
+  cursor: pointer;
+}
+.close:hover,
+.close:focus {
+  color: #999;
+  text-decoration: none;
+  cursor: pointer;
+}
+/* Next & previous buttons */
+.prev,
+.next {
+cursor: pointer;
+  position: absolute;
+  top: 50%;
+  padding: 16px;
+  margin-top: -50px;
+  color: white;
+  font-size: 40px;
+  user-select: none;
+  transition: 0.2s;
+}
+.prev {
+  left: 1px;
+}
+.next {
+  right: 1px;
+}
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
   /* Add a transparency effect for thumnbail images */
   .demo {
     opacity: 0.6;
@@ -97,29 +134,6 @@
   .active,
   .demo:hover {
     opacity: 1;
-  }
-
-  .dot-container {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-    z-index: 2;
-  }
-
-  .dot {
-    display: inline-block;
-    margin: 0 4px;
-    height: 12px;
-    width: 12px;
-    background: #bbb;
-    border-radius: 50%;
-    transition: background 0.3s ease;
-    cursor: pointer;
-  }
-
-  .dot.active, .dot:hover {
-    background: #717171;
   }
 
   .fade {
@@ -148,11 +162,17 @@
     <header style="text-align: center;">
         <a class="flicker" style="font-size: 40px; color: red;" href="index.html">Home</a>
     </header>
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightbox-img">
+    <div id="lightbox-caption"></div>
 
-<div class="slideshow-container" id="slideshow">
-  <a class="prev" onclick="plusSlides(-1)">❮</a>
-  <a class="next" onclick="plusSlides(1)">❯</a>
+    <!-- Arrows -->
+    <a class="prev">&#10094;</a>
+    <a class="next">&#10095;</a>
 </div>
+
 
 <!-- Thumbnail images -->
 <div class="row">
@@ -195,92 +215,84 @@
 </div>
 
 <script>
-  const slidesData = [
+const slidesData = [
     { src: "img/1.jpg", caption: "Ratargul Trip!" },
     { src: "img/2.jpg", caption: "Ratargul" },
     { src: "img/3.jpg", caption: "SUST Gate" },
     { src: "img/4.jpg", caption: "Like" },
     { src: "img/5.jpg", caption: "Comment" },
     { src: "img/6.jpg", caption: "Share" },
-    { src: "img/7.jpg", caption: "Osamni International Airport" },
-    { src: "img/8.jpg", caption: "Osamni International Airport" },
-    { src: "img/9.jpg", caption: "Osamni International Airport" },
-    { src: "img/10.jpg", caption: "Osamni International Airport" },
-    { src: "img/11.jpg", caption: "Osamni International Airport" },
+    { src: "img/7.jpg", caption: "Osmani International Airport" },
+    { src: "img/8.jpg", caption: "Osmani International Airport" },
+    { src: "img/9.jpg", caption: "Osmani International Airport" },
+    { src: "img/10.jpg", caption: "Osmani International Airport" },
+    { src: "img/11.jpg", caption: "Osmani International Airport" }
+];
 
-  ];
-  
-  let slideIndex = 1;
-  let slideTimer;
-  const slideshow = document.getElementById("slideshow");
-  
-  // Build slides and dots dynamically
-  function buildSlideshow() {
-    slidesData.forEach((slide, i) => {
-      // Create slide div
-      const slideDiv = document.createElement("div");
-      slideDiv.className = "mySlides fade";
-      slideDiv.innerHTML = `
-        <div class="numbertext">${i + 1} / ${slidesData.length}</div>
-        <img src="${slide.src}" alt="${slide.caption}">
-        <div class="text">${slide.caption}</div>
-      `;
-      slideshow.appendChild(slideDiv);
-    });
-  
-    // Add prev/next buttons
-    const prev = document.createElement("a");
-    prev.className = "prev";
-    prev.innerHTML = "❮";
-    prev.onclick = () => plusSlides(-1);
-  
-    const next = document.createElement("a");
-    next.className = "next";
-    next.innerHTML = "❯";
-    next.onclick = () => plusSlides(1);
-  
-    slideshow.appendChild(prev);
-    slideshow.appendChild(next);
-  
+let lightIndex = 0;
 
-  }
-  
-  function showSlides(n) {
-    const slides = document.getElementsByClassName("mySlides");
-    const dots = document.getElementsByClassName("dot");
-  
-    if (n > slides.length) slideIndex = 1;
-    if (n < 1) slideIndex = slides.length;
-  
-    for (let slide of slides) slide.style.display = "none";
-    for (let dot of dots) dot.className = dot.className.replace(" active", "");
-  
-    slides[slideIndex - 1].style.display = "block";
-    dots[slideIndex - 1].className += " active";
-  }
-  
-  function plusSlides(n) {
-    showSlides(slideIndex += n);
-  }
-  
-  function currentSlide(n) {
-    showSlides(slideIndex = n);
-  }
-  
-  
-  let startX = 0;
-  slideshow.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-  });
-  slideshow.addEventListener('touchend', (e) => {
-    let endX = e.changedTouches[0].clientX;
-    if (startX - endX > 50) plusSlides(1);
-    else if (endX - startX > 50) plusSlides(-1);
-  });
-  
-  buildSlideshow();
-  showSlides(slideIndex);
-  </script>
+const lightbox = document.getElementById("lightbox");
+const lightImg = document.getElementById("lightbox-img");
+const lightCaption = document.getElementById("lightbox-caption");
+
+// OPEN LIGHTBOX
+function openLightbox(n) {
+    lightIndex = n;
+    lightbox.style.display = "block";
+    lightImg.src = slidesData[n].src;
+    lightCaption.innerText = slidesData[n].caption;
+}
+
+// CLOSE LIGHTBOX
+function closeLightbox() {
+    lightbox.style.display = "none";
+}
+
+// NEXT / PREVIOUS
+function nextLight() {
+    lightIndex = (lightIndex + 1) % slidesData.length;
+    openLightbox(lightIndex);
+}
+
+function prevLight() {
+    lightIndex = (lightIndex - 1 + slidesData.length) % slidesData.length;
+    openLightbox(lightIndex);
+}
+
+// THUMBNAILS CLICK
+document.querySelectorAll(".demo").forEach((thumb, i) => {
+    thumb.addEventListener("click", () => openLightbox(i));
+});
+
+// CLOSE BUTTON
+document.querySelector(".lightbox-close").onclick = closeLightbox;
+
+// CLICK OUTSIDE IMAGE TO CLOSE
+lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+});
+
+// ARROWS
+document.querySelector(".prev").onclick = (e) => {
+    e.stopPropagation();
+    prevLight();
+};
+
+document.querySelector(".next").onclick = (e) => {
+    e.stopPropagation();
+    nextLight();
+};
+
+// KEYBOARD SUPPORT
+document.addEventListener("keydown", (e) => {
+    if (lightbox.style.display === "block") {
+        if (e.key === "ArrowRight") nextLight();
+        if (e.key === "ArrowLeft") prevLight();
+        if (e.key === "Escape") closeLightbox();
+    }
+});
+</script>
+
   
   
 
